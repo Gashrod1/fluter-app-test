@@ -150,18 +150,6 @@ Pour ajouter une nouvelle action :
 - Vérifiez que votre API retourne bien des dispositifs
 - Actualisez la liste avec le bouton refresh
 
-## 📄 Licence
-
-Ce projet est sous licence MIT.
-
 ## 👤 Auteur
 
 Développé par Gashrod1
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
-
-## 📞 Support
-
-Pour toute question ou problème, ouvrez une issue sur GitHub.
