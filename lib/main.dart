@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Échec de la connexion. Vérifiez vos identifiants.'),
+            content: Text('Echec de la connexion. Vérifiez vos identifiants.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -253,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
             content: Text(
               success
                   ? 'Commande envoyée avec succès'
-                  : 'Échec de l\'envoi de la commande',
+                  : 'Echec de l\'envoi de la commande',
             ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),

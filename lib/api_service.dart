@@ -19,7 +19,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        // Récupérer le cookie de session depuis les headers
+        // Récupérer le cookie de session depuis les en-têtes
         final setCookie = response.headers['set-cookie'];
         if (setCookie != null) {
           _sessionCookie = setCookie.split(';')[0];
@@ -66,7 +66,7 @@ class ApiService {
     }
   }
 
-  // Envoyer une commande à un device
+  // Envoyer un commande à un device
   Future<bool> sendCommand(int deviceId, DeviceAction action) async {
     if (_sessionCookie == null) {
       throw Exception('Non authentifié. Veuillez vous connecter d\'abord.');
