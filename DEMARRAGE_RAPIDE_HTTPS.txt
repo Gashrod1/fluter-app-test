@@ -1,0 +1,141 @@
+🔒 CONFIGURATION HTTPS - DÉMARRAGE RAPIDE
+==========================================
+
+Domaine : dev.flexitronic.fr
+VPS : Serveur distant
+
+📋 CE QU'IL VOUS FAUT :
+-----------------------
+✅ Un VPS avec accès SSH
+✅ Docker installé sur le VPS
+✅ L'IP de votre VPS
+✅ Accès à la configuration DNS de flexitronic.fr
+✅ Une adresse email valide
+
+
+🎯 ÉTAPE 1 : CONFIGURER LE DNS (5 min)
+---------------------------------------
+Chez votre registrar de domaine :
+
+Type : A
+Nom : dev
+Valeur : [IP_DE_VOTRE_VPS]
+TTL : 3600
+
+Attendre 5 minutes, puis vérifier :
+> nslookup dev.flexitronic.fr
+
+
+🎯 ÉTAPE 2 : PRÉPARER SUR VOTRE PC (2 min)
+-------------------------------------------
+1. Ouvrir : deploy\deploy-https.ps1
+
+2. Modifier les lignes 5-6 :
+   $VPS_USER = "votre_nom_utilisateur_ssh"
+   $VPS_IP = "123.456.789.012"
+
+3. Sauvegarder
+
+
+🎯 ÉTAPE 3 : TRANSFÉRER LES FICHIERS (5 min)
+---------------------------------------------
+Dans PowerShell :
+
+> cd c:\Users\cutes\Documents\altern\fluter-app-test
+> .\deploy\deploy-https.ps1
+
+Le script va :
+✓ Builder votre app Flutter
+✓ Transférer les fichiers vers le VPS
+✓ Vous guider pour la suite
+
+
+🎯 ÉTAPE 4 : CONFIGURER HTTPS SUR LE VPS (10 min)
+--------------------------------------------------
+1. Se connecter au VPS :
+   > ssh votre_utilisateur@IP_VPS
+
+2. Aller dans le répertoire :
+   $ cd ~/doxa-motorisation-app
+
+3. Éditer le script pour mettre VOTRE email :
+   $ nano deploy/setup-https-vps.sh
+   
+   Changez :
+   EMAIL="votre-email@example.com"
+   
+   Ctrl+X pour sauvegarder
+
+4. Exécuter le script :
+   $ chmod +x deploy/setup-https-vps.sh
+   $ ./deploy/setup-https-vps.sh
+
+5. Suivre les instructions à l'écran
+
+
+🎯 ÉTAPE 5 : TESTER (1 min)
+----------------------------
+Ouvrir dans votre navigateur :
+→ https://dev.flexitronic.fr
+
+Vous devriez voir :
+✅ Votre application Flutter
+✅ Le cadenas 🔒 dans la barre d'adresse
+✅ Certificat SSL valide
+
+
+✨ C'EST TERMINÉ !
+------------------
+Votre application est maintenant :
+✓ Sécurisée avec HTTPS
+✓ Accessible sur dev.flexitronic.fr
+✓ Protégée par un certificat SSL gratuit (Let's Encrypt)
+✓ Le certificat se renouvelle automatiquement
+
+
+📚 BESOIN DE PLUS DE DÉTAILS ?
+-------------------------------
+→ deploy\HTTPS_RESUME.md        : Résumé avec plus d'infos
+→ deploy\CHECKLIST_HTTPS.md     : Checklist détaillée
+→ deploy\GUIDE_HTTPS.md         : Guide complet
+
+
+🆘 PROBLÈMES ?
+--------------
+1. DNS ne fonctionne pas :
+   → Attendre 10-30 minutes (propagation DNS)
+   → Vérifier la config DNS chez votre registrar
+
+2. Erreur lors du certificat SSL :
+   → Vérifier que ports 80 et 443 sont ouverts
+   → Vérifier que le DNS pointe vers le bon serveur
+
+3. Docker ne démarre pas :
+   → docker-compose -f docker-compose-https.yml logs -f
+
+
+📞 COMMANDES UTILES SUR LE VPS
+-------------------------------
+# Voir les logs
+$ docker-compose -f docker-compose-https.yml logs -f
+
+# Redémarrer
+$ docker-compose -f docker-compose-https.yml restart
+
+# Arrêter
+$ docker-compose -f docker-compose-https.yml down
+
+# Démarrer
+$ docker-compose -f docker-compose-https.yml up -d
+
+
+🎉 FÉLICITATIONS !
+------------------
+Vous avez sécurisé votre application avec HTTPS !
+
+Prochaines étapes :
+→ Tester votre application
+→ Configurer le monitoring
+→ Faire des sauvegardes régulières
+
+Bon développement ! 🚀
