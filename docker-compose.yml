@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  airsend-app:
+    build: .
+    container_name: airsend-flutter-app
+    ports:
+      - "80:80"
+      # Pour HTTPS, décommentez et configurez les certificats SSL
+      # - "443:443"
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.airsend.rule=Host(`votre-domaine.com`)"
+      - "traefik.http.routers.airsend.entrypoints=web"
+
+networks:
+  web:
+    external: false
