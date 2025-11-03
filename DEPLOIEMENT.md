@@ -1,6 +1,6 @@
-# 📱 Doxa Motorisation Flutter App - Guide de Déploiement VPS
+# 📱 Airsend Flutter App - Guide de Déploiement VPS
 
-Application Flutter pour la gestion de dispositifs Doxa Motorisation, avec déploiement sur VPS.
+Application Flutter pour la gestion de dispositifs Airsend, avec déploiement sur VPS.
 
 ## 📚 Table des matières
 
@@ -13,7 +13,7 @@ Application Flutter pour la gestion de dispositifs Doxa Motorisation, avec dépl
 ## 🎯 Aperçu
 
 Cette application Flutter permet de :
-- Se connecter à l'API Doxa Motorisation
+- Se connecter à l'API Airsend
 - Gérer des dispositifs connectés
 - Envoyer des commandes aux dispositifs
 
@@ -81,13 +81,6 @@ Nous avons créé des guides complets pour vous :
 - Configuration Docker Compose
 - Gestion et monitoring
 
-#### 🔒 Guide HTTPS (Nouveau !)
-👉 **[deploy/GUIDE_HTTPS.md](deploy/GUIDE_HTTPS.md)**
-- Configuration SSL/TLS avec Let's Encrypt
-- Sécurisation de votre domaine
-- Certificats automatiques et gratuits
-- Guide pour dev.flexitronic.fr
-
 ## 📂 Structure du Projet
 
 ```
@@ -134,7 +127,7 @@ flutter_app_project/
 
 2. **Copiez les fichiers**
    - Utilisez WinSCP ou FileZilla
-   - Copiez `build\web\*` vers `/var/www/doxa-motorisation-app` sur le VPS
+   - Copiez `build\web\*` vers `/var/www/airsend-app` sur le VPS
 
 3. **Accédez à votre application**
    - Ouvrez `http://VOTRE_IP_VPS`
@@ -143,10 +136,10 @@ flutter_app_project/
 
 ```powershell
 # Build de l'image
-docker build -t doxa-motorisation-app .
+docker build -t airsend-app .
 
 # Lancement
-docker run -d -p 80:80 --name doxa-motorisation-app doxa-motorisation-app:latest
+docker run -d -p 80:80 --name airsend-app airsend-app:latest
 ```
 
 ## 🔧 Configuration
@@ -191,7 +184,7 @@ df -h
 ### L'application ne se charge pas
 1. Vérifiez que Nginx est démarré : `systemctl status nginx`
 2. Consultez les logs : `tail -f /var/log/nginx/error.log`
-3. Vérifiez les permissions : `ls -la /var/www/doxa-motorisation-app`
+3. Vérifiez les permissions : `ls -la /var/www/airsend-app`
 
 ### Erreur de build Flutter
 ```powershell
