@@ -81,6 +81,13 @@ Nous avons créé des guides complets pour vous :
 - Configuration Docker Compose
 - Gestion et monitoring
 
+#### 🔒 Guide HTTPS (Nouveau !)
+👉 **[deploy/GUIDE_HTTPS.md](deploy/GUIDE_HTTPS.md)**
+- Configuration SSL/TLS avec Let's Encrypt
+- Sécurisation de votre domaine
+- Certificats automatiques et gratuits
+- Guide pour dev.flexitronic.fr
+
 ## 📂 Structure du Projet
 
 ```
