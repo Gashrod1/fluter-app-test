@@ -1,18 +1,17 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'models/device.dart';
 
 class ApiService {
   static const String baseUrl = 'https://airsend.cloud';
-  static final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'AirsendFlutterApp/1.0',
-      },
-      validateStatus: (status) => status! < 500,
-    ),
-  );
+  static String? _sessionId;
+
+  static Map<String, String> _getHeaders() {
+    return {
+      'Accept': 'application/json',
+      'User-Agent': 'AirsendFlutterApp/1.0',
+    };
+  }
 
   /// Connexion à l'API Airsend
   ///
@@ -24,40 +23,46 @@ class ApiService {
   static Future<Map<String, dynamic>> login(
       String localIp, String password) async {
     try {
-      final response = await _dio.get(
-        '/interface/login',
+      final uri = Uri.parse('$baseUrl/interface/login').replace(
         queryParameters: {
           'localip': localIp,
           'password': password,
         },
       );
 
+      final response = await http.get(uri, headers: _getHeaders());
+
       if (response.statusCode == 200 || response.statusCode == 302) {
         // Extraction de la session depuis le body JSON
-        if (response.data is Map && response.data.containsKey('session')) {
-          return {'session': response.data['session']};
+        try {
+          final jsonData = json.decode(response.body);
+          if (jsonData is Map && jsonData.containsKey('session')) {
+            _sessionId = jsonData['session'];
+            return {'session': _sessionId!};
+          }
+        } catch (_) {
+          // Pas un JSON valide, continuer avec les autres méthodes
         }
 
         // Si c'est une string, chercher avec regex
-        final bodyString = response.data.toString();
+        final bodyString = response.body;
         final jsonMatch =
             RegExp(r'"session"\s*:\s*"([^"]+)"').firstMatch(bodyString);
 
         if (jsonMatch != null) {
-          final sessionId = jsonMatch.group(1)!;
-          return {'session': sessionId};
+          _sessionId = jsonMatch.group(1)!;
+          return {'session': _sessionId!};
         }
 
         // Fallback: chercher dans les cookies
         final setCookieHeader = response.headers['set-cookie'];
         if (setCookieHeader != null && setCookieHeader.isNotEmpty) {
-          final cookieString = setCookieHeader.first;
-          if (cookieString.contains('session=')) {
+          if (setCookieHeader.contains('session=')) {
             final sessionMatch =
-                RegExp(r'session=([^;]+)').firstMatch(cookieString);
+                RegExp(r'session=([^;]+)').firstMatch(setCookieHeader);
             if (sessionMatch != null) {
-              final sessionId = sessionMatch.group(1)!;
-              return {'session': sessionId};
+              _sessionId = sessionMatch.group(1)!;
+              return {'session': _sessionId!};
             }
           }
         }
@@ -73,39 +78,42 @@ class ApiService {
 
   /// Récupère la liste des devices
   ///
-  /// [sessionId] - La session obtenue via login
+  /// [sessionId] - La session obtenue via login (peut être null si géré par cookie)
   /// [useCounter] - Indique si on veut le compteur (défaut: false)
   ///
   /// Retourne une liste de devices
-  static Future<List<Device>> getDevices(String sessionId,
+  static Future<List<Device>> getDevices(String? sessionId,
       {bool useCounter = false}) async {
     try {
-      print('========== GET DEVICES ==========');
-      print('URL: $baseUrl/device?useCounter=$useCounter');
-      print('Cookie: session=$sessionId');
+      // Utiliser _sessionId si sessionId n'est pas fourni
+      final session = sessionId ?? _sessionId;
+      if (session != null) {
+        // Mettre à jour _sessionId si un nouveau est fourni
+        if (sessionId != null) {
+          _sessionId = sessionId;
+        }
+      }
 
-      final response = await _dio.get(
-        '/device',
-        queryParameters: {'useCounter': useCounter},
-        options: Options(
-          headers: {
-            'Cookie': 'session=$sessionId',
-          },
-        ),
+      // Ajouter la session comme paramètre de requête au lieu du cookie
+      final queryParams = <String, String>{
+        'useCounter': useCounter.toString(),
+      };
+      
+      if (session != null) {
+        // Nettoyer la session (supprimer les espaces et retours à la ligne)
+        final cleanSession = session.trim();
+        queryParams['session'] = cleanSession;
+      }
+
+      final uri = Uri.parse('$baseUrl/device').replace(
+        queryParameters: queryParams,
       );
 
-      print('Status code: ${response.statusCode}');
-      print('--- HEADERS REÇUS ---');
-      response.headers.map.forEach((key, value) {
-        print('  $key: $value');
-      });
-      print('--- BODY ---');
-      print('${response.data}');
-      print('=================================');
+      final response = await http.get(uri, headers: _getHeaders());
 
       if (response.statusCode == 200) {
         // Parse le JSON
-        final List<dynamic> jsonList = response.data as List;
+        final List<dynamic> jsonList = json.decode(response.body) as List;
         return jsonList.map((json) => Device.fromJson(json)).toList();
       } else {
         throw Exception(
@@ -118,22 +126,31 @@ class ApiService {
 
   /// Envoie une commande à un device
   ///
-  /// [sessionId] - La session obtenue via login
+  /// [sessionId] - La session obtenue via login (peut être null si géré par cookie)
   /// [deviceId] - L'ID du device
   /// [action] - L'action à exécuter (DeviceAction)
   ///
   /// Retourne true si la commande a été envoyée avec succès
   static Future<bool> sendCommand(
-      String sessionId, int deviceId, DeviceAction action) async {
+      String? sessionId, int deviceId, DeviceAction action) async {
     try {
-      final response = await _dio.get(
-        '/device/$deviceId/command/${action.value}',
-        options: Options(
-          headers: {
-            'Cookie': 'session=$sessionId',
-          },
-        ),
+      // Utiliser _sessionId si sessionId n'est pas fourni
+      final session = sessionId ?? _sessionId;
+      if (session != null && sessionId != null) {
+        _sessionId = sessionId;
+      }
+      
+      // Ajouter la session comme paramètre de requête
+      final queryParams = <String, String>{};
+      if (session != null) {
+        queryParams['session'] = session;
+      }
+      
+      final uri = Uri.parse('$baseUrl/device/$deviceId/command/${action.value}').replace(
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
+      
+      final response = await http.get(uri, headers: _getHeaders());
 
       return response.statusCode == 200;
     } catch (e) {

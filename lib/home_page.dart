@@ -122,68 +122,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
 
-            // Carte avec la session
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.key, color: Colors.blue),
-                        SizedBox(width: 8),
-                        Text(
-                          'Session ID',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SelectableText(
-                              widget.session,
-                              style: const TextStyle(
-                                fontFamily: 'monospace',
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.copy, size: 20),
-                            tooltip: 'Copier',
-                            onPressed: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: widget.session));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Session copiée dans le presse-papiers'),
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 0),
 
             // Section Devices
             Row(
@@ -283,53 +222,84 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 12),
                             // Boutons de contrôle
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // Bouton STOP
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () =>
-                                        _sendCommand(device, DeviceAction.stop),
-                                    icon: const Icon(Icons.stop, size: 18),
-                                    label: const Text('Stop'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange,
-                                      foregroundColor: Colors.white,
+                            LayoutBuilder(
+                              builder: (context, constraints) {
+                                // Calcul de la taille de police en fonction de la largeur
+                                final double buttonWidth = constraints.maxWidth / 3;
+                                final double fontSize = buttonWidth < 100 ? 11 : (buttonWidth < 120 ? 13 : 14);
+                                final double iconSize = buttonWidth < 100 ? 16 : 18;
+                                final double padding = buttonWidth < 100 ? 4 : 8;
+                                
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // Bouton STOP
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () =>
+                                            _sendCommand(device, DeviceAction.stop),
+                                        icon: Icon(Icons.stop, size: iconSize),
+                                        label: Text(
+                                          'Stop',
+                                          style: TextStyle(fontSize: fontSize),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.orange,
+                                          foregroundColor: Colors.white,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: padding,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                // Bouton DOWN
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () =>
-                                        _sendCommand(device, DeviceAction.down),
-                                    icon: const Icon(Icons.arrow_downward,
-                                        size: 18),
-                                    label: const Text('Down'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                      foregroundColor: Colors.white,
+                                    const SizedBox(width: 8),
+                                    // Bouton DOWN
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () =>
+                                            _sendCommand(device, DeviceAction.down),
+                                        icon: Icon(Icons.arrow_downward,
+                                            size: iconSize),
+                                        label: Text(
+                                          'Down',
+                                          style: TextStyle(fontSize: fontSize),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: padding,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                // Bouton UP
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () =>
-                                        _sendCommand(device, DeviceAction.up),
-                                    icon: const Icon(Icons.arrow_upward,
-                                        size: 18),
-                                    label: const Text('Up'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
+                                    const SizedBox(width: 8),
+                                    // Bouton UP
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () =>
+                                            _sendCommand(device, DeviceAction.up),
+                                        icon: Icon(Icons.arrow_upward,
+                                            size: iconSize),
+                                        label: Text(
+                                          'Up',
+                                          style: TextStyle(fontSize: fontSize),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: padding,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                  ],
+                                );
+                              },
                             ),
                           ],
                         ),
