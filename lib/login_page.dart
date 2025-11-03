@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Connexion Airsend'),
+        title: const Text('Connexion Doxa Motorisation'),
         centerTitle: true,
       ),
       body: Center(
@@ -87,15 +87,22 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo ou titre
-                const Icon(
-                  Icons.cloud,
-                  size: 80,
-                  color: Colors.blue,
+                // Logo Doxa Motorisation
+                Image.asset(
+                  'assets/images/logo_doxa.webp',
+                  height: 100,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.business,
+                      size: 80,
+                      color: Colors.blue,
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Airsend',
+                  'Doxa Motorisation',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32,

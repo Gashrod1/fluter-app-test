@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  airsend-app:
+  doxa-motorisation-app:
     build: .
-    container_name: airsend-flutter-app
+    container_name: doxa-motorisation-flutter-app
     ports:
       - "80:80"
       # Pour HTTPS, décommentez et configurez les certificats SSL
@@ -13,8 +13,8 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.airsend.rule=Host(`votre-domaine.com`)"
-      - "traefik.http.routers.airsend.entrypoints=web"
+      - "traefik.http.routers.doxa-motorisation.rule=Host(`votre-domaine.com`)"
+      - "traefik.http.routers.doxa-motorisation.entrypoints=web"
 
 networks:
   web:

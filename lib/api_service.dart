@@ -9,11 +9,11 @@ class ApiService {
   static Map<String, String> _getHeaders() {
     return {
       'Accept': 'application/json',
-      'User-Agent': 'AirsendFlutterApp/1.0',
+      'User-Agent': 'DoxaMotorisationApp/1.0',
     };
   }
 
-  /// Connexion à l'API Airsend
+  /// Connexion à l'API Doxa Motorisation
   ///
   /// [localIp] - L'adresse IP locale
   /// [password] - Le mot de passe
