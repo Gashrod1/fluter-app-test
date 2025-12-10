@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   // Logo Doxa Motorisation
                   Image.asset(
-                    'assets/images/logo_doxa.webp',
+                    'assets/images/logo.png',
                     height: 120,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {

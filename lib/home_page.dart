@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/images/logo_doxa.webp',
+              'assets/images/logo.png',
               height: 40,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
